@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning Platform - Jaseci</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .nav-item.active {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+        
+        .lesson-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .lesson-content li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .quiz-question {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-option {
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f5f7ff;
+        }
+        
+        .quiz-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .skill-item {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .skill-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .mastery-bar {
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .mastery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Interactive Learning Platform for Jaseci</h1>
+            <p class="subtitle">Learn Jac and Jaseci with adaptive lessons, AI-powered quizzes, and personalized recommendations</p>
+        </header>
+        
+        <div class="layout">
+            <div class="sidebar">
+                <h3>📚 Navigation</h3>
+                <div class="nav-item active" onclick="showSection('dashboard')">Dashboard</div>
+                <div class="nav-item" onclick="showSection('lessons')">Lessons</div>
+                <div class="nav-item" onclick="showSection('lesson-1')">Jac Basics</div>
+                <div class="nav-item" onclick="showSection('lesson-2')">Nodes & Edges</div>
+                <div class="nav-item" onclick="showSection('lesson-3')">Walkers</div>
+                <div class="nav-item" onclick="showSection('quiz')">Take Quiz</div>
+                <div class="nav-item" onclick="showSection('progress')">Progress</div>
+                <div class="nav-item" onclick="showSection('skillmap')">Skill Map</div>
+            </div>
+            
+            <div class="content">
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="section active">
+                    <h2>📊 Welcome to Your Learning Dashboard</h2>
+                    <p style="margin-bottom: 20px;">Welcome! Start your journey learning Jac and Jaseci with our adaptive learning platform.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Lessons Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Overall Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Quizzes Taken</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0h</div>
+                            <div class="stat-label">Time Invested</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">🚀 Getting Started</h3>
+                    <div class="lesson-content">
+                        <p>This platform helps you learn Jac through:</p>
+                        <ul>
+                            <li><strong>Interactive Lessons</strong> - Structured content on Jac fundamentals, walkers, OSP, and byLLM</li>
+                            <li><strong>AI-Generated Quizzes</strong> - Questions automatically created from lessons</li>
+                            <li><strong>Intelligent Assessment</strong> - LLM evaluates your answers in real-time</li>
+                            <li><strong>Progress Tracking</strong> - See your mastery levels and weak areas</li>
+                            <li><strong>Personalized Recommendations</strong> - Suggested lessons based on your progress</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="showSection('lessons')">Browse Lessons</button>
+                        <button class="btn-secondary" onclick="showSection('quiz')">Take a Quiz</button>
+                    </div>
+                </div>
+                
+                <!-- Lessons List -->
+                <div id="lessons" class="section">
+                    <h2>📚 Available Lessons</h2>
+                    <div class="lesson-content">
+                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #667eea;">What is Jac?</strong><br>
+                                    <small style="color: #666;">Beginner • 20 minutes</small>
+                                </div>
+                                <button class="btn-primary" onclick="showSection('lesson-1')">Start</button>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #667eea;">Nodes and Edges</strong><br>
+                                    <small style="color: #666;">Beginner • 25 minutes</small>
+                                </div>
+                                <button class="btn-primary" onclick="showSection('lesson-2')">Start</button>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #667eea;">Walkers and Traversal</strong><br>
+                                    <small style="color: #666;">Intermediate • 35 minutes</small>
+                                </div>
+                                <button class="btn-primary" onclick="showSection('lesson-3')">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lesson 1: Jac Basics -->
+                <div id="lesson-1" class="section">
+                    <h2>What is Jac?</h2>
+                    <div class="lesson-content">
+                        <p>Welcome to Jac! Jac is a modern programming language designed around <strong>graph-based computation</strong> and the <strong>Object-Spatial-Paradigm (OSP)</strong>.</p>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Key Concepts</h3>
+                        <ul>
+                            <li><strong>Graph-Based:</strong> Programs are built using nodes and edges</li>
+                            <li><strong>Walkers:</strong> Mobile agents that traverse graphs</li>
+                            <li><strong>Spatial:</strong> Data is organized in space, not sequentially</li>
+                            <li><strong>byLLM:</strong> Built-in AI integration for intelligent programs</li>
+                        </ul>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Your First Program</h3>
+                        <div class="code-block">with entry {
+    print("Hello from Jac!");
+}</div>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Why Jac?</h3>
+                        <p>Jac excels at:</p>
+                        <ul>
+                            <li>Knowledge graphs and semantic networks</li>
+                            <li>Social network analysis</li>
+                            <li>Recommendation systems</li>
+                            <li>AI-integrated applications</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
+                        <button class="btn-primary" onclick="completeLesson('lesson-1')">Mark Complete</button>
+                        <button class="btn-primary" onclick="showSection('quiz')">Take Quiz</button>
+                    </div>
+                </div>
+                
+                <!-- Lesson 2: Nodes & Edges -->
+                <div id="lesson-2" class="section">
+                    <h2>Nodes and Edges</h2>
+                    <div class="lesson-content">
+                        <p>Nodes and edges are the fundamental building blocks of Jac programs.</p>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Nodes?</h3>
+                        <p>A <strong>node</strong> is a data structure that represents a vertex in a graph. Each node can hold data (attributes).</p>
+                        
+                        <div class="code-block">node Person {
+    has name: str;
+    has age: int;
+    has email: str;
+}</div>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Edges?</h3>
+                        <p>An <strong>edge</strong> is a connection between nodes that can have its own attributes.</p>
+                        
+                        <div class="code-block">edge knows {
+    has since_year: int;
+    has strength: float;
+}</div>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Building a Graph</h3>
+                        <p>Combine nodes and edges to create graph structures:</p>
+                        
+                        <div class="code-block">node Person { has name: str; }
+edge knows { has years: int; }
+
+with entry {
+    let person1 = spawn Person(name="Alice");
+    let person2 = spawn Person(name="Bob");
+    person1 --> knows(years=5) --> person2;
+}</div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
+                        <button class="btn-primary" onclick="completeLesson('lesson-2')">Mark Complete</button>
+                    </div>
+                </div>
+                
+                <!-- Lesson 3: Walkers -->
+                <div id="lesson-3" class="section">
+                    <h2>Walkers and Traversal</h2>
+                    <div class="lesson-content">
+                        <p>A <strong>walker</strong> is a mobile entity that traverses a graph, performing operations at each node.</p>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Walkers?</h3>
+                        <p>Walkers enable:</p>
+                        <ul>
+                            <li>Graph traversal and searching</li>
+                            <li>Data processing and transformation</li>
+                            <li>Pattern matching in complex structures</li>
+                            <li>Building algorithms on graphs</li>
+                        </ul>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Basic Walker</h3>
+                        <div class="code-block">walker Visitor {
+    can visit {
+        print("Visiting node");
+    }
+}</div>
+                        
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Traversing Edges</h3>
+                        <p>Walkers can navigate along edges:</p>
+                        
+                        <div class="code-block">walker Explorer {
+    can explore {
+        print("At node");
+        take --> node {
+            explore();
+        }
+    }
+}</div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
+                        <button class="btn-primary" onclick="completeLesson('lesson-3')">Mark Complete</button>
+                    </div>
+                </div>
+                
+                <!-- Quiz Section -->
+                <div id="quiz" class="section">
+                    <h2>🎯 Quick Quiz</h2>
+                    
+                    <div class="quiz-question">
+                        <strong>Question 1: What does OSP stand for?</strong>
+                        <div style="margin-top: 15px;">
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="a"> Object-Spatial-Paradigm
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="b"> Object-Structured-Protocol
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="c"> Online-Service-Platform
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="d"> Open-Source-Project
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <strong>Question 2: Jac is designed for graph-based programming.</strong>
+                        <div style="margin-top: 15px;">
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="true"> True
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="false"> False
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="showSection('dashboard')">Back</button>
+                        <button class="btn-primary" onclick="submitQuiz()">Submit Answers</button>
+                    </div>
+                </div>
+                
+                <!-- Progress Section -->
+                <div id="progress" class="section">
+                    <h2>📈 Your Progress</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="lessonsCompleted">0/5</div>
+                            <div class="stat-label">Lessons Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="overallProgress">0%</div>
+                            <div class="stat-label">Overall Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="quizzesTaken">0</div>
+                            <div class="stat-label">Quizzes Taken</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="timeInvested">0h</div>
+                            <div class="stat-label">Time Invested</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">Learning Areas</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Jac Basics</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="mastery-bar">
+                            <div class="mastery-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Nodes & Edges</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="mastery-bar">
+                            <div class="mastery-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Walkers</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="mastery-bar">
+                            <div class="mastery-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skill Map Section -->
+                <div id="skillmap" class="section">
+                    <h2>🗺️ Your Skill Map</h2>
+                    <p style="margin-bottom: 20px;">Visual representation of your mastery across Jac and Jaseci concepts.</p>
+                    
+                    <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">Core Concepts</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; background: #e8e8e8; border-radius: 8px; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Nodes</div>
+                            <div class="mastery-bar" style="margin-bottom: 8px;">
+                                <div class="mastery-fill" style="width: 0%"></div>
+                            </div>
+                            <div style="font-size: 12px; color: #666;">0% Mastered</div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #e8e8e8; border-radius: 8px; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Edges</div>
+                            <div class="mastery-bar" style="margin-bottom: 8px;">
+                                <div class="mastery-fill" style="width: 0%"></div>
+                            </div>
+                            <div style="font-size: 12px; color: #666;">0% Mastered</div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #e8e8e8; border-radius: 8px; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Walkers</div>
+                            <div class="mastery-bar" style="margin-bottom: 8px;">
+                                <div class="mastery-fill" style="width: 0%"></div>
+                            </div>
+                            <div style="font-size: 12px; color: #666;">0% Mastered</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">Advanced Concepts</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; background: #f0f0f0; border-radius: 8px; text-align: center; opacity: 0.5;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">🔒 OSP</div>
+                            <div style="font-size: 12px; color: #666;">Locked</div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #f0f0f0; border-radius: 8px; text-align: center; opacity: 0.5;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">🔒 byLLM</div>
+                            <div style="font-size: 12px; color: #666;">Locked</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let completedLessons = [];
+        let quizzesTaken = 0;
+        
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and highlight the correct nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.textContent.toLowerCase().includes(sectionId.replace('-', ' '))) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Special case for dashboard
+            if (sectionId === 'dashboard') {
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            }
+        }
+        
+        function completeLesson(lessonId) {
+            if (!completedLessons.includes(lessonId)) {
+                completedLessons.push(lessonId);
+                updateProgress();
+                alert('Lesson completed! Great job! 🎉');
+            } else {
+                alert('You already completed this lesson!');
+            }
+        }
+        
+        function submitQuiz() {
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            
+            if (!q1 || !q2) {
+                alert('Please answer all questions');
+                return;
+            }
+            
+            let score = 0;
+            if (q1.value === 'a') score += 50;
+            if (q2.value === 'true') score += 50;
+            
+            quizzesTaken++;
+            updateProgress();
+            
+            alert(`Quiz submitted! Your score: ${score}% 🎯`);
+            showSection('progress');
+        }
+        
+        function updateProgress() {
+            const progress = (completedLessons.length / 5) * 100;
+            document.getElementById('lessonsCompleted').textContent = completedLessons.length + '/5';
+            document.getElementById('overallProgress').textContent = Math.round(progress) + '%';
+            document.getElementById('quizzesTaken').textContent = quizzesTaken;
+            
+            // Update mastery bars in progress section
+            const masteryPercentage = (completedLessons.length / 3) * 100;
+            document.querySelectorAll('.mastery-fill').forEach(fill => {
+                fill.style.width = Math.min(masteryPercentage, 100) + '%';
+            });
+        }
+    </script>
+</body>
+</html>
