@@ -7,9 +7,20 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 import json
+from sample_data import SAMPLE_LESSONS, SAMPLE_QUIZZES, SAMPLE_CONCEPTS
 
 app = Flask(__name__)
 CORS(app)
+
+# Create lookup dictionaries for easy access
+lessons_by_id = {lesson['lesson_id']: lesson for lesson in SAMPLE_LESSONS}
+quizzes_by_id = {quiz['quiz_id']: quiz for quiz in SAMPLE_QUIZZES}
+quizzes_by_lesson = {}
+for quiz in SAMPLE_QUIZZES:
+    lesson_id = quiz.get('lesson_id')
+    if lesson_id not in quizzes_by_lesson:
+        quizzes_by_lesson[lesson_id] = []
+    quizzes_by_lesson[lesson_id].append(quiz)
 
 # ============================================================================
 # LESSON ENDPOINTS
@@ -22,35 +33,52 @@ def get_lesson(lesson_id):
     """
     user_id = request.headers.get('X-User-ID')
     
-    # Here you would call the Jac walker:
-    # result = spawn('ContentServer', {
-    #     'user_id': user_id,
-    #     'lesson_id': lesson_id
-    # }).get_lesson_content()
+    # Check if lesson exists in sample data
+    if lesson_id in lessons_by_id:
+        lesson = lessons_by_id[lesson_id]
+        return jsonify({
+            'lessonId': lesson['lesson_id'],
+            'title': lesson['title'],
+            'description': lesson['description'],
+            'difficulty': lesson['difficulty'],
+            'durationMinutes': lesson['duration_minutes'],
+            'category': lesson['category'],
+            'prerequisites': lesson['prerequisites'],
+            'sections': [
+                {
+                    'sectionNum': sec['section_num'],
+                    'sectionTitle': sec['section_title'],
+                    'body': sec['body'],
+                    'codeExample': sec['code_example'],
+                    'keyConcepts': sec['key_concepts']
+                }
+                for sec in lesson['sections']
+            ]
+        })
     
-    # Mock response for demonstration
+    # Fallback for non-existent lesson
+    return jsonify({'error': 'Lesson not found'}), 404
+
+@app.route('/api/lessons', methods=['GET'])
+def get_all_lessons():
+    """
+    Get all available lessons
+    """
+    lessons = [
+        {
+            'lessonId': lesson['lesson_id'],
+            'title': lesson['title'],
+            'difficulty': lesson['difficulty'],
+            'durationMinutes': lesson['duration_minutes'],
+            'description': lesson['description'],
+            'category': lesson['category']
+        }
+        for lesson in SAMPLE_LESSONS
+    ]
+    
     return jsonify({
-        'lessonId': lesson_id,
-        'title': 'Introduction to Jac Basics',
-        'description': 'Learn the fundamentals of Jac language',
-        'difficulty': 'beginner',
-        'durationMinutes': 30,
-        'sections': [
-            {
-                'sectionNum': 1,
-                'sectionTitle': 'What is Jac?',
-                'body': '<p>Jac is a language designed for graph-based programming...</p>',
-                'codeExample': 'node Person {\n    has name: str;\n}',
-                'keyConcepts': ['nodes', 'graphs', 'spatial paradigm']
-            },
-            {
-                'sectionNum': 2,
-                'sectionTitle': 'Your First Node',
-                'body': '<p>Let\'s create our first node...</p>',
-                'codeExample': 'node Message {\n    has text: str;\n}',
-                'keyConcepts': ['node definition', 'attributes']
-            }
-        ]
+        'lessons': lessons,
+        'count': len(lessons)
     })
 
 @app.route('/api/lessons/category/<category>', methods=['GET'])
@@ -60,23 +88,46 @@ def get_lessons_by_category(category):
     """
     user_id = request.headers.get('X-User-ID')
     
-    # Call ContentServer.get_lesson_by_category()
+    # Filter lessons by category
+    matching_lessons = [
+        {
+            'lessonId': lesson['lesson_id'],
+            'title': lesson['title'],
+            'difficulty': lesson['difficulty'],
+            'durationMinutes': lesson['duration_minutes'],
+            'description': lesson['description'],
+            'category': lesson['category']
+        }
+        for lesson in SAMPLE_LESSONS
+        if lesson['category'] == category
+    ]
     
     return jsonify({
         'category': category,
-        'lessons': [
-            {
-                'lessonId': 'jac-basics-1',
-                'title': 'Introduction to Jac',
-                'difficulty': 'beginner',
-                'durationMinutes': 30
-            }
-        ]
+        'lessons': matching_lessons,
+        'count': len(matching_lessons)
     })
 
-# ============================================================================
-# PROGRESS & TRACKING ENDPOINTS
-# ============================================================================
+@app.route('/api/concepts', methods=['GET'])
+def get_concepts():
+    """
+    Get all learning concepts
+    """
+    concepts = [
+        {
+            'conceptId': concept['concept_id'],
+            'conceptName': concept['concept_name'],
+            'category': concept['category'],
+            'description': concept['description'],
+            'resources': concept.get('resources', [])
+        }
+        for concept in SAMPLE_CONCEPTS
+    ]
+    
+    return jsonify({
+        'concepts': concepts,
+        'count': len(concepts)
+    })
 
 @app.route('/api/progress/track', methods=['POST'])
 def track_progress():
@@ -205,36 +256,70 @@ def get_quiz(quiz_id):
     """
     user_id = request.headers.get('X-User-ID')
     
-    # Call QuizGenerator.generate_quiz() if needed
+    if quiz_id in quizzes_by_id:
+        quiz = quizzes_by_id[quiz_id]
+        return jsonify({
+            'quizId': quiz['quiz_id'],
+            'title': quiz['title'],
+            'description': quiz.get('description', ''),
+            'difficulty': quiz['difficulty'],
+            'lessonId': quiz.get('lesson_id'),
+            'questions': [
+                {
+                    'questionId': q['question_id'],
+                    'questionText': q['question_text'],
+                    'questionType': q['question_type'],
+                    'options': q.get('options', []),
+                    'starterCode': q.get('starter_code', ''),
+                    'keywords': q.get('keywords', []),
+                    'correctAnswer': q.get('correct_answer')
+                }
+                for q in quiz['questions']
+            ]
+        })
+    
+    return jsonify({'error': 'Quiz not found'}), 404
+
+@app.route('/api/quizzes/lesson/<lesson_id>', methods=['GET'])
+def get_quizzes_by_lesson(lesson_id):
+    """
+    Get all quizzes for a specific lesson
+    """
+    quizzes = quizzes_by_lesson.get(lesson_id, [])
     
     return jsonify({
-        'quizId': quiz_id,
-        'title': 'Jac Fundamentals Quiz',
-        'description': 'Test your knowledge of Jac basics',
-        'difficulty': 'beginner',
-        'questions': [
+        'lessonId': lesson_id,
+        'quizzes': [
             {
-                'questionId': 'q1',
-                'questionText': 'What is a node in Jac?',
-                'questionType': 'multiple_choice',
-                'options': [
-                    'A data structure that represents a vertex in a graph',
-                    'A function definition',
-                    'A type of variable',
-                    'A control flow statement'
-                ]
-            },
-            {
-                'questionId': 'q2',
-                'questionText': 'Walkers are used to traverse graphs.',
-                'questionType': 'true_false'
-            },
-            {
-                'questionId': 'q3',
-                'questionText': 'Explain the concept of spatial programming.',
-                'questionType': 'free_text'
+                'quizId': quiz['quiz_id'],
+                'title': quiz['title'],
+                'difficulty': quiz['difficulty'],
+                'questionCount': len(quiz['questions'])
             }
-        ]
+            for quiz in quizzes
+        ],
+        'count': len(quizzes)
+    })
+
+@app.route('/api/quizzes', methods=['GET'])
+def get_all_quizzes():
+    """
+    Get all available quizzes
+    """
+    quizzes = [
+        {
+            'quizId': quiz['quiz_id'],
+            'title': quiz['title'],
+            'difficulty': quiz['difficulty'],
+            'lessonId': quiz.get('lesson_id'),
+            'questionCount': len(quiz['questions'])
+        }
+        for quiz in SAMPLE_QUIZZES
+    ]
+    
+    return jsonify({
+        'quizzes': quizzes,
+        'count': len(quizzes)
     })
 
 @app.route('/api/quizzes/evaluate-answer', methods=['POST'])
@@ -387,4 +472,4 @@ def submit_exercise():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)

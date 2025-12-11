@@ -288,9 +288,6 @@
                 <h3>📚 Navigation</h3>
                 <div class="nav-item active" onclick="showSection('dashboard')">Dashboard</div>
                 <div class="nav-item" onclick="showSection('lessons')">Lessons</div>
-                <div class="nav-item" onclick="showSection('lesson-1')">Jac Basics</div>
-                <div class="nav-item" onclick="showSection('lesson-2')">Nodes & Edges</div>
-                <div class="nav-item" onclick="showSection('lesson-3')">Walkers</div>
                 <div class="nav-item" onclick="showSection('quiz')">Take Quiz</div>
                 <div class="nav-item" onclick="showSection('progress')">Progress</div>
                 <div class="nav-item" onclick="showSection('skillmap')">Skill Map</div>
@@ -342,197 +339,22 @@
                 <!-- Lessons List -->
                 <div id="lessons" class="section">
                     <h2>📚 Available Lessons</h2>
-                    <div class="lesson-content">
-                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong style="color: #667eea;">What is Jac?</strong><br>
-                                    <small style="color: #666;">Beginner • 20 minutes</small>
-                                </div>
-                                <button class="btn-primary" onclick="showSection('lesson-1')">Start</button>
-                            </div>
-                        </div>
-                        
-                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong style="color: #667eea;">Nodes and Edges</strong><br>
-                                    <small style="color: #666;">Beginner • 25 minutes</small>
-                                </div>
-                                <button class="btn-primary" onclick="showSection('lesson-2')">Start</button>
-                            </div>
-                        </div>
-                        
-                        <div style="padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong style="color: #667eea;">Walkers and Traversal</strong><br>
-                                    <small style="color: #666;">Intermediate • 35 minutes</small>
-                                </div>
-                                <button class="btn-primary" onclick="showSection('lesson-3')">Start</button>
-                            </div>
-                        </div>
-                    </div>
+                    <p style="color: #666; margin-bottom: 20px;">Choose a lesson to get started with learning Jac and Jaseci</p>
+                    <div id="lessons-list" class="lesson-content"></div>
                 </div>
                 
-                <!-- Lesson 1: Jac Basics -->
-                <div id="lesson-1" class="section">
-                    <h2>What is Jac?</h2>
-                    <div class="lesson-content">
-                        <p>Welcome to Jac! Jac is a modern programming language designed around <strong>graph-based computation</strong> and the <strong>Object-Spatial-Paradigm (OSP)</strong>.</p>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Key Concepts</h3>
-                        <ul>
-                            <li><strong>Graph-Based:</strong> Programs are built using nodes and edges</li>
-                            <li><strong>Walkers:</strong> Mobile agents that traverse graphs</li>
-                            <li><strong>Spatial:</strong> Data is organized in space, not sequentially</li>
-                            <li><strong>byLLM:</strong> Built-in AI integration for intelligent programs</li>
-                        </ul>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Your First Program</h3>
-                        <div class="code-block">with entry {
-    print("Hello from Jac!");
-}</div>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Why Jac?</h3>
-                        <p>Jac excels at:</p>
-                        <ul>
-                            <li>Knowledge graphs and semantic networks</li>
-                            <li>Social network analysis</li>
-                            <li>Recommendation systems</li>
-                            <li>AI-integrated applications</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
-                        <button class="btn-primary" onclick="completeLesson('lesson-1')">Mark Complete</button>
-                        <button class="btn-primary" onclick="showSection('quiz')">Take Quiz</button>
-                    </div>
-                </div>
+                <!-- Individual Lesson Detail -->
+                <div id="lesson-detail" class="section"></div>
                 
-                <!-- Lesson 2: Nodes & Edges -->
-                <div id="lesson-2" class="section">
-                    <h2>Nodes and Edges</h2>
-                    <div class="lesson-content">
-                        <p>Nodes and edges are the fundamental building blocks of Jac programs.</p>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Nodes?</h3>
-                        <p>A <strong>node</strong> is a data structure that represents a vertex in a graph. Each node can hold data (attributes).</p>
-                        
-                        <div class="code-block">node Person {
-    has name: str;
-    has age: int;
-    has email: str;
-}</div>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Edges?</h3>
-                        <p>An <strong>edge</strong> is a connection between nodes that can have its own attributes.</p>
-                        
-                        <div class="code-block">edge knows {
-    has since_year: int;
-    has strength: float;
-}</div>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Building a Graph</h3>
-                        <p>Combine nodes and edges to create graph structures:</p>
-                        
-                        <div class="code-block">node Person { has name: str; }
-edge knows { has years: int; }
-
-with entry {
-    let person1 = spawn Person(name="Alice");
-    let person2 = spawn Person(name="Bob");
-    person1 --> knows(years=5) --> person2;
-}</div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
-                        <button class="btn-primary" onclick="completeLesson('lesson-2')">Mark Complete</button>
-                    </div>
-                </div>
-                
-                <!-- Lesson 3: Walkers -->
-                <div id="lesson-3" class="section">
-                    <h2>Walkers and Traversal</h2>
-                    <div class="lesson-content">
-                        <p>A <strong>walker</strong> is a mobile entity that traverses a graph, performing operations at each node.</p>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">What are Walkers?</h3>
-                        <p>Walkers enable:</p>
-                        <ul>
-                            <li>Graph traversal and searching</li>
-                            <li>Data processing and transformation</li>
-                            <li>Pattern matching in complex structures</li>
-                            <li>Building algorithms on graphs</li>
-                        </ul>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Basic Walker</h3>
-                        <div class="code-block">walker Visitor {
-    can visit {
-        print("Visiting node");
-    }
-}</div>
-                        
-                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Traversing Edges</h3>
-                        <p>Walkers can navigate along edges:</p>
-                        
-                        <div class="code-block">walker Explorer {
-    can explore {
-        print("At node");
-        take --> node {
-            explore();
-        }
-    }
-}</div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn-secondary" onclick="showSection('lessons')">Back</button>
-                        <button class="btn-primary" onclick="completeLesson('lesson-3')">Mark Complete</button>
-                    </div>
-                </div>
-                
-                <!-- Quiz Section -->
+                <!-- Quiz Section - List all quizzes -->
                 <div id="quiz" class="section">
-                    <h2>🎯 Quick Quiz</h2>
-                    
-                    <div class="quiz-question">
-                        <strong>Question 1: What does OSP stand for?</strong>
-                        <div style="margin-top: 15px;">
-                            <label class="quiz-option">
-                                <input type="radio" name="q1" value="a"> Object-Spatial-Paradigm
-                            </label>
-                            <label class="quiz-option">
-                                <input type="radio" name="q1" value="b"> Object-Structured-Protocol
-                            </label>
-                            <label class="quiz-option">
-                                <input type="radio" name="q1" value="c"> Online-Service-Platform
-                            </label>
-                            <label class="quiz-option">
-                                <input type="radio" name="q1" value="d"> Open-Source-Project
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="quiz-question">
-                        <strong>Question 2: Jac is designed for graph-based programming.</strong>
-                        <div style="margin-top: 15px;">
-                            <label class="quiz-option">
-                                <input type="radio" name="q2" value="true"> True
-                            </label>
-                            <label class="quiz-option">
-                                <input type="radio" name="q2" value="false"> False
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn-secondary" onclick="showSection('dashboard')">Back</button>
-                        <button class="btn-primary" onclick="submitQuiz()">Submit Answers</button>
-                    </div>
+                    <h2>🎯 Available Quizzes</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Test your knowledge with these quizzes</p>
+                    <div id="quizzes-list" class="lesson-content"></div>
                 </div>
+                
+                <!-- Individual Quiz Detail -->
+                <div id="quiz-detail" class="section"></div>
                 
                 <!-- Progress Section -->
                 <div id="progress" class="section">
@@ -641,8 +463,285 @@ with entry {
     </div>
     
     <script>
+        const API_URL = 'http://localhost:5000/api';
         let completedLessons = [];
         let quizzesTaken = 0;
+        let allLessons = [];
+        let allQuizzes = [];
+        
+        // Fetch all lessons from API
+        async function loadLessons() {
+            try {
+                const response = await fetch(`${API_URL}/lessons`);
+                const data = await response.json();
+                allLessons = data.lessons || [];
+                renderLessonsList();
+            } catch (error) {
+                console.error('Error loading lessons:', error);
+            }
+        }
+        
+        // Fetch all quizzes from API
+        async function loadQuizzes() {
+            try {
+                const response = await fetch(`${API_URL}/quizzes`);
+                const data = await response.json();
+                allQuizzes = data.quizzes || [];
+                renderQuizzesList();
+            } catch (error) {
+                console.error('Error loading quizzes:', error);
+            }
+        }
+        
+        // Render quizzes list
+        function renderQuizzesList() {
+            const quizzesContainer = document.getElementById('quizzes-list');
+            if (!quizzesContainer) return;
+            
+            quizzesContainer.innerHTML = '';
+            
+            allQuizzes.forEach(quiz => {
+                const quizDiv = document.createElement('div');
+                quizDiv.style.cssText = 'padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;';
+                quizDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #667eea;">${quiz.title}</strong><br>
+                            <small style="color: #666;">${quiz.difficulty.charAt(0).toUpperCase() + quiz.difficulty.slice(1)} • ${quiz.questionCount} questions</small>
+                        </div>
+                        <button class="btn-primary" onclick="viewQuiz('${quiz.quizId}')">Take Quiz</button>
+                    </div>
+                `;
+                quizzesContainer.appendChild(quizDiv);
+            });
+        }
+        
+        // Store current quiz data for evaluation
+        let currentQuiz = null;
+        
+        // View a specific quiz
+        async function viewQuiz(quizId) {
+            try {
+                const response = await fetch(`${API_URL}/quizzes/${quizId}`);
+                const quiz = await response.json();
+                currentQuiz = quiz; // Store for later evaluation
+                
+                const quizContainer = document.getElementById('quiz-detail');
+                if (!quizContainer) return;
+                
+                let questionsHtml = '';
+                quiz.questions.forEach((question, index) => {
+                    questionsHtml += `
+                        <div class="quiz-question" id="question-${index}">
+                            <strong>Question ${index + 1}: ${question.questionText}</strong>
+                            <div style="margin-top: 15px;">
+                    `;
+                    
+                    if (question.questionType === 'multiple_choice') {
+                        question.options.forEach((option, optIndex) => {
+                            questionsHtml += `
+                                <label class="quiz-option">
+                                    <input type="radio" name="q${index}" value="${option}"> ${option}
+                                </label>
+                            `;
+                        });
+                    } else if (question.questionType === 'true_false') {
+                        questionsHtml += `
+                            <label class="quiz-option">
+                                <input type="radio" name="q${index}" value="True"> True
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q${index}" value="False"> False
+                            </label>
+                        `;
+                    } else if (question.questionType === 'free_text') {
+                        questionsHtml += `
+                            <textarea name="q${index}" rows="4" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd;"></textarea>
+                        `;
+                    } else if (question.questionType === 'code') {
+                        questionsHtml += `
+                            <textarea name="q${index}" rows="8" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; font-family: monospace;">${question.starterCode || ''}</textarea>
+                        `;
+                    }
+                    
+                    questionsHtml += `
+                            </div>
+                            <div id="feedback-${index}" style="margin-top: 10px;"></div>
+                        </div>
+                    `;
+                });
+                
+                quizContainer.innerHTML = `
+                    <h2>${quiz.title}</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Difficulty: ${quiz.difficulty}</p>
+                    <div id="quiz-questions-container">${questionsHtml}</div>
+                    <div id="quiz-result" style="margin-top: 30px;"></div>
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn-secondary" onclick="showSection('quiz')">Back to Quizzes</button>
+                        <button class="btn-primary" onclick="submitQuizAnswers('${quizId}')">Submit Answers</button>
+                    </div>
+                `;
+                
+                showSection('quiz-detail');
+            } catch (error) {
+                console.error('Error loading quiz:', error);
+            }
+        }
+        
+        // Submit quiz answers and show score
+        function submitQuizAnswers(quizId) {
+            if (!currentQuiz) {
+                alert('Quiz data not loaded');
+                return;
+            }
+            
+            let correctCount = 0;
+            let totalQuestions = currentQuiz.questions.length;
+            const questionsContainer = document.getElementById('quiz-questions-container');
+            
+            // Evaluate each question
+            currentQuiz.questions.forEach((question, index) => {
+                const feedbackDiv = document.getElementById(`feedback-${index}`);
+                let userAnswer = null;
+                let isCorrect = false;
+                
+                if (question.questionType === 'multiple_choice') {
+                    const selected = questionsContainer.querySelector(`input[name="q${index}"]:checked`);
+                    if (selected) {
+                        userAnswer = selected.value;
+                        // Direct string comparison for multiple choice
+                        isCorrect = userAnswer === question.correctAnswer;
+                    }
+                } else if (question.questionType === 'true_false') {
+                    const selected = questionsContainer.querySelector(`input[name="q${index}"]:checked`);
+                    if (selected) {
+                        userAnswer = selected.value;
+                        // Convert both to strings for comparison (handles boolean from API)
+                        const correctAnswerStr = String(question.correctAnswer).charAt(0).toUpperCase() + String(question.correctAnswer).slice(1);
+                        isCorrect = userAnswer === correctAnswerStr;
+                    }
+                } else if (question.questionType === 'free_text') {
+                    const textarea = questionsContainer.querySelector(`textarea[name="q${index}"]`);
+                    if (textarea) {
+                        userAnswer = textarea.value.toLowerCase();
+                        // Check if answer contains any of the keywords
+                        const keywords = question.keywords || [];
+                        isCorrect = keywords.some(keyword => userAnswer.includes(keyword.toLowerCase()));
+                    }
+                } else if (question.questionType === 'code') {
+                    const textarea = questionsContainer.querySelector(`textarea[name="q${index}"]`);
+                    if (textarea) {
+                        userAnswer = textarea.value;
+                        // For code questions, give credit if they wrote something substantial
+                        isCorrect = userAnswer && userAnswer.length > 20;
+                    }
+                }
+                
+                if (isCorrect) {
+                    correctCount++;
+                    feedbackDiv.innerHTML = '<div style="color: #28a745; padding: 10px; background: #d4edda; border-radius: 4px;">✓ Correct!</div>';
+                } else {
+                    let correctAnswerText = '';
+                    if (question.questionType === 'multiple_choice' || question.questionType === 'true_false') {
+                        correctAnswerText = `Correct answer: ${question.correctAnswer}`;
+                    }
+                    feedbackDiv.innerHTML = `<div style="color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 4px;">✗ Incorrect. ${correctAnswerText}</div>`;
+                }
+            });
+            
+            // Calculate score
+            const score = Math.round((correctCount / totalQuestions) * 100);
+            const passed = score >= 70;
+            
+            // Display result
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.innerHTML = `
+                <div style="background: ${passed ? '#d4edda' : '#fff3cd'}; border: 2px solid ${passed ? '#28a745' : '#ffc107'}; border-radius: 8px; padding: 20px; text-align: center;">
+                    <h3 style="color: ${passed ? '#28a745' : '#856404'}; margin-bottom: 10px;">
+                        ${passed ? '🎉 Congratulations!' : '📚 Keep Learning!'}
+                    </h3>
+                    <div style="font-size: 48px; font-weight: bold; color: ${passed ? '#28a745' : '#856404'}; margin: 20px 0;">
+                        ${score}%
+                    </div>
+                    <div style="font-size: 18px; color: #666; margin-bottom: 10px;">
+                        You answered ${correctCount} out of ${totalQuestions} questions correctly
+                    </div>
+                    ${passed ? 
+                        '<div style="color: #28a745;">You passed this quiz! Great job! 🎯</div>' : 
+                        '<div style="color: #856404;">Score 70% or higher to pass. Try again!</div>'
+                    }
+                </div>
+            `;
+            
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Update progress
+            quizzesTaken++;
+            updateProgress();
+        }
+        
+        // Render lessons dynamically
+        function renderLessonsList() {
+            const lessonsContainer = document.getElementById('lessons-list');
+            if (!lessonsContainer) return;
+            
+            lessonsContainer.innerHTML = '';
+            
+            allLessons.forEach(lesson => {
+                const lessonDiv = document.createElement('div');
+                lessonDiv.style.cssText = 'padding: 15px; background: #f5f5f5; border-radius: 6px; margin-bottom: 15px;';
+                lessonDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #667eea;">${lesson.title}</strong><br>
+                            <small style="color: #666;">${lesson.difficulty.charAt(0).toUpperCase() + lesson.difficulty.slice(1)} • ${lesson.durationMinutes} minutes</small>
+                        </div>
+                        <button class="btn-primary" onclick="viewLesson('${lesson.lessonId}')">Start</button>
+                    </div>
+                `;
+                lessonsContainer.appendChild(lessonDiv);
+            });
+        }
+        
+        // View a specific lesson
+        async function viewLesson(lessonId) {
+            try {
+                const response = await fetch(`${API_URL}/lessons/${lessonId}`);
+                const lesson = await response.json();
+                
+                const lessonContainer = document.getElementById('lesson-detail');
+                if (!lessonContainer) return;
+                
+                let sectionsHtml = '';
+                lesson.sections.forEach(section => {
+                    sectionsHtml += `
+                        <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">${section.sectionTitle}</h3>
+                        <div class="lesson-content">${section.body}</div>
+                    `;
+                    if (section.codeExample) {
+                        sectionsHtml += `<div class="code-block">${section.codeExample}</div>`;
+                    }
+                });
+                
+                lessonContainer.innerHTML = `
+                    <h2>${lesson.title}</h2>
+                    <p style="color: #666; margin-bottom: 20px;">${lesson.description}</p>
+                    <div style="background: #e8f1ff; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                        <strong>Difficulty:</strong> ${lesson.difficulty} | <strong>Duration:</strong> ${lesson.durationMinutes} minutes
+                    </div>
+                    <div>${sectionsHtml}</div>
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn-primary" onclick="completeLesson('${lessonId}', '${lesson.title}')">Mark as Complete</button>
+                        <button class="btn-secondary" onclick="showSection('lessons')">Back to Lessons</button>
+                    </div>
+                `;
+                
+                showSection('lesson-detail');
+            } catch (error) {
+                console.error('Error loading lesson:', error);
+            }
+        }
         
         function showSection(sectionId) {
             // Hide all sections
@@ -654,6 +753,11 @@ with entry {
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.add('active');
+            }
+            
+            // Load quizzes if showing quiz section
+            if (sectionId === 'quiz' && allQuizzes.length === 0) {
+                loadQuizzes();
             }
             
             // Update nav items
@@ -674,11 +778,12 @@ with entry {
             }
         }
         
-        function completeLesson(lessonId) {
+        function completeLesson(lessonId, lessonTitle) {
             if (!completedLessons.includes(lessonId)) {
                 completedLessons.push(lessonId);
                 updateProgress();
-                alert('Lesson completed! Great job! 🎉');
+                alert(`Completed "${lessonTitle}"! Great job! 🎉`);
+                showSection('lessons');
             } else {
                 alert('You already completed this lesson!');
             }
@@ -705,17 +810,23 @@ with entry {
         }
         
         function updateProgress() {
-            const progress = (completedLessons.length / 5) * 100;
-            document.getElementById('lessonsCompleted').textContent = completedLessons.length + '/5';
+            const progress = (completedLessons.length / allLessons.length) * 100;
+            document.getElementById('lessonsCompleted').textContent = completedLessons.length + '/' + allLessons.length;
             document.getElementById('overallProgress').textContent = Math.round(progress) + '%';
             document.getElementById('quizzesTaken').textContent = quizzesTaken;
             
             // Update mastery bars in progress section
-            const masteryPercentage = (completedLessons.length / 3) * 100;
+            const masteryPercentage = (completedLessons.length / Math.max(allLessons.length, 3)) * 100;
             document.querySelectorAll('.mastery-fill').forEach(fill => {
                 fill.style.width = Math.min(masteryPercentage, 100) + '%';
             });
         }
+        
+        // Initialize the platform
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLessons();
+            loadQuizzes();
+        });
     </script>
 </body>
 </html>

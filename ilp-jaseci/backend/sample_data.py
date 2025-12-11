@@ -360,6 +360,386 @@ walker Calculator {
                 "key_concepts": ["AI agents", "Personalization", "Intelligent reasoning"]
             }
         ]
+    },
+    {
+        "lesson_id": "jac-advanced-walkers-2",
+        "title": "Advanced Walker Patterns",
+        "category": "walkers",
+        "difficulty": "advanced",
+        "duration_minutes": 50,
+        "description": "Master complex walker patterns and multi-agent systems",
+        "prerequisites": ["jac-walkers-1"],
+        "sections": [
+            {
+                "section_num": 1,
+                "section_title": "State Management in Walkers",
+                "body": """
+                <p>Walkers can maintain state as they traverse graphs. This enables 
+                sophisticated algorithms and stateful graph processing.</p>
+                
+                <p>Key state patterns:</p>
+                <ul>
+                    <li>Tracking visited nodes</li>
+                    <li>Accumulating results</li>
+                    <li>Conditional branching based on state</li>
+                    <li>Stack-based processing</li>
+                </ul>
+                """,
+                "code_example": """walker StatefulWalker {
+    has visited: set = set();
+    has result: dict = {};
+    has depth: int = 0;
+    
+    can traverse {
+        visited.add(here.id);
+        depth += 1;
+        
+        if depth < 5 {
+            for n in --> {
+                if n.id not in visited {
+                    take n;
+                }
+            }
+        }
+    }
+}""",
+                "key_concepts": ["Walker state", "Depth tracking", "Memoization"]
+            },
+            {
+                "section_num": 2,
+                "section_title": "Multi-Walker Coordination",
+                "body": """
+                <p>Multiple walkers can work together on the same graph, enabling 
+                parallel and distributed processing patterns.</p>
+                """,
+                "code_example": """walker Producer {
+    can generate_data {
+        # Process and produce data
+        here.data = compute_result();
+        take --> spread_data;
+    }
+}
+
+walker Consumer {
+    can consume_data {
+        # Read and aggregate data
+        aggregate(here.data);
+        take --> next;
+    }
+}""",
+                "key_concepts": ["Multi-walker systems", "Coordination", "Data flow"]
+            },
+            {
+                "section_num": 3,
+                "section_title": "Error Handling in Walkers",
+                "body": """
+                <p>Build robust walkers with proper error handling:</p>
+                """,
+                "code_example": """walker SafeWalker {
+    can process {
+        try {
+            # Risky operation
+            process_node(here);
+        } except {
+            # Handle gracefully
+            log_error(here.id);
+            take --> safe_path;
+        }
+    }
+}""",
+                "key_concepts": ["Exception handling", "Graceful degradation"]
+            }
+        ]
+    },
+    {
+        "lesson_id": "jac-graph-algorithms-3",
+        "title": "Graph Algorithms in Jac",
+        "category": "algorithms",
+        "difficulty": "advanced",
+        "duration_minutes": 60,
+        "description": "Implement classic graph algorithms using Jac walkers",
+        "prerequisites": ["jac-advanced-walkers-2"],
+        "sections": [
+            {
+                "section_num": 1,
+                "section_title": "Breadth-First Search (BFS)",
+                "body": """
+                <p>BFS explores a graph level by level. It's useful for finding 
+                shortest paths and nearest neighbors.</p>
+                """,
+                "code_example": """walker BFS {
+    has queue: list = [];
+    has visited: set = set();
+    
+    can search {
+        if here.id not in visited {
+            visited.add(here.id);
+            queue.append(here);
+            
+            for neighbor in --> {
+                if neighbor.id not in visited {
+                    queue.append(neighbor);
+                }
+            }
+        }
+    }
+    
+    can process_queue {
+        while queue {
+            node = queue.pop(0);
+            take node via search;
+        }
+    }
+}""",
+                "key_concepts": ["BFS", "Queue-based traversal", "Level-order search"]
+            },
+            {
+                "section_num": 2,
+                "section_title": "Depth-First Search (DFS)",
+                "body": """
+                <p>DFS explores as far as possible along each branch. Great for 
+                topological sorting and cycle detection.</p>
+                """,
+                "code_example": """walker DFS {
+    has visited: set = set();
+    has stack: list = [];
+    
+    can search {
+        stack.append(here);
+        
+        while stack {
+            node = stack.pop();
+            if node.id not in visited {
+                visited.add(node.id);
+                process(node);
+                
+                for neighbor in node --> {
+                    if neighbor.id not in visited {
+                        stack.append(neighbor);
+                    }
+                }
+            }
+        }
+    }
+}""",
+                "key_concepts": ["DFS", "Stack-based traversal", "Backtracking"]
+            },
+            {
+                "section_num": 3,
+                "section_title": "PageRank and Centrality",
+                "body": """
+                <p>Calculate node importance using PageRank and centrality measures:</p>
+                """,
+                "code_example": """walker Centrality {
+    has scores: dict = {};
+    has iterations: int = 10;
+    
+    can calculate_rank {
+        for iteration in range(iterations) {
+            for node in all_nodes {
+                # Iterative rank calculation
+                rank = 0.15;  # Base score
+                for parent in <-- node {
+                    rank += 0.85 * (parent.score / parent.outlinks);
+                }
+                scores[node.id] = rank;
+            }
+        }
+    }
+}""",
+                "key_concepts": ["PageRank", "Centrality measures", "Network analysis"]
+            }
+        ]
+    },
+    {
+        "lesson_id": "jac-knowledge-graphs-4",
+        "title": "Building Knowledge Graphs",
+        "category": "applications",
+        "difficulty": "intermediate",
+        "duration_minutes": 55,
+        "description": "Design and implement knowledge graphs for real-world applications",
+        "prerequisites": ["jac-nodes-1", "jac-osp-1"],
+        "sections": [
+            {
+                "section_num": 1,
+                "section_title": "Knowledge Graph Fundamentals",
+                "body": """
+                <p>A knowledge graph represents entities and relationships in a domain. 
+                It's perfect for:</p>
+                <ul>
+                    <li>Semantic search and question answering</li>
+                    <li>Recommendation engines</li>
+                    <li>Ontology representation</li>
+                    <li>Linked data and knowledge bases</li>
+                </ul>
+                
+                <p>Jac's graph-based nature makes it ideal for knowledge graph work.</p>
+                """,
+                "code_example": "",
+                "key_concepts": ["Knowledge graphs", "Ontologies", "Semantic relationships"]
+            },
+            {
+                "section_num": 2,
+                "section_title": "Designing Knowledge Graph Schemas",
+                "body": """
+                <p>Structure your knowledge graph with proper node and edge types:</p>
+                """,
+                "code_example": """node Entity {
+    has name: str;
+    has type: str;
+    has properties: dict;
+}
+
+node Concept {
+    has term: str;
+    has definition: str;
+}
+
+edge has_property {
+    has confidence: float;
+}
+
+edge related_to {
+    has relationship_type: str;
+    has strength: float;
+}
+
+edge is_a {
+    has inherited: bool;
+}""",
+                "key_concepts": ["Schema design", "Entity-relationship modeling", "Type systems"]
+            },
+            {
+                "section_num": 3,
+                "section_title": "Querying and Reasoning",
+                "body": """
+                <p>Use walkers to query and reason over your knowledge graph:</p>
+                """,
+                "code_example": """walker ReasoningEngine {
+    has results: list = [];
+    
+    @by_llm
+    can answer_question(question: str) {
+        # Use LLM to understand question
+        # Walk the knowledge graph
+        # Compile and rank results
+        return reasoning_results;
+    }
+    
+    can traverse_relationships {
+        # Find related entities
+        for related in -->has_property {
+            results.append(related);
+            take related;
+        }
+    }
+}""",
+                "key_concepts": ["Graph queries", "Reasoning engines", "Semantic search"]
+            }
+        ]
+    },
+    {
+        "lesson_id": "jac-performance-optimization-5",
+        "title": "Performance Optimization",
+        "category": "advanced_topics",
+        "difficulty": "advanced",
+        "duration_minutes": 50,
+        "description": "Optimize Jac programs for performance and scalability",
+        "prerequisites": ["jac-advanced-walkers-2"],
+        "sections": [
+            {
+                "section_num": 1,
+                "section_title": "Profiling and Analysis",
+                "body": """
+                <p>Identify bottlenecks in your Jac programs:</p>
+                <ul>
+                    <li>Graph traversal complexity</li>
+                    <li>Memory usage patterns</li>
+                    <li>LLM call frequency and cost</li>
+                    <li>State accumulation</li>
+                </ul>
+                
+                <p>Use metrics to guide optimization decisions.</p>
+                """,
+                "code_example": """import time
+
+walker ProfiledWalker {
+    has start_time: float;
+    has node_count: int = 0;
+    
+    can traverse {
+        start_time = time.time();
+        self.traverse_graph();
+        elapsed = time.time() - start_time;
+        
+        print(f"Visited {node_count} nodes in {elapsed}s");
+        print(f"Rate: {node_count/elapsed} nodes/sec");
+    }
+}""",
+                "key_concepts": ["Profiling", "Benchmarking", "Performance metrics"]
+            },
+            {
+                "section_num": 2,
+                "section_title": "Graph Optimization Techniques",
+                "body": """
+                <p>Optimize graph structure and traversal:</p>
+                <ul>
+                    <li>Pruning unnecessary edges</li>
+                    <li>Caching traversal results</li>
+                    <li>Batch processing</li>
+                    <li>Lazy evaluation</li>
+                </ul>
+                """,
+                "code_example": """walker OptimizedWalker {
+    has cache: dict = {};
+    
+    can traverse_cached {
+        if here.id in cache {
+            # Return cached result
+            return cache[here.id];
+        }
+        
+        result = compute_expensive_operation();
+        cache[here.id] = result;
+        return result;
+    }
+    
+    can batch_process {
+        # Process multiple nodes together
+        nodes_batch = collect_nearby_nodes(5);
+        process_batch(nodes_batch);
+    }
+}""",
+                "key_concepts": ["Caching", "Batch processing", "Lazy evaluation"]
+            },
+            {
+                "section_num": 3,
+                "section_title": "Scaling Jac Applications",
+                "body": """
+                <p>Build Jac applications that scale:</p>
+                <ul>
+                    <li>Distribute graph across nodes</li>
+                    <li>Parallel walker execution</li>
+                    <li>Efficient LLM usage and caching</li>
+                    <li>Connection pooling and resource management</li>
+                </ul>
+                """,
+                "code_example": """walker DistributedWalker {
+    has partition_id: int;
+    has num_partitions: int;
+    
+    can process_partition {
+        # Process only nodes for this partition
+        for node in get_partition_nodes(partition_id) {
+            if node.id % num_partitions == partition_id {
+                process(node);
+            }
+        }
+    }
+}""",
+                "key_concepts": ["Distributed processing", "Partitioning", "Scalability"]
+            }
+        ]
     }
 ]
 
@@ -451,6 +831,140 @@ SAMPLE_QUIZZES = [
 }"""
             }
         ]
+    },
+    {
+        "quiz_id": "quiz-advanced-walkers-2",
+        "lesson_id": "jac-advanced-walkers-2",
+        "title": "Advanced Walker Patterns Quiz",
+        "difficulty": "advanced",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "Which of the following is NOT a state management pattern in walkers?",
+                "question_type": "multiple_choice",
+                "options": [
+                    "Tracking visited nodes",
+                    "Accumulating results",
+                    "Defining node attributes",
+                    "Stack-based processing"
+                ],
+                "correct_answer": "Defining node attributes"
+            },
+            {
+                "question_id": "q2",
+                "question_text": "Multiple walkers can coordinate on the same graph to enable parallel processing.",
+                "question_type": "true_false",
+                "correct_answer": True
+            },
+            {
+                "question_id": "q3",
+                "question_text": "Explain how you would implement cycle detection in a walker.",
+                "question_type": "free_text",
+                "keywords": ["visited", "tracking", "set", "path"]
+            }
+        ]
+    },
+    {
+        "quiz_id": "quiz-graph-algorithms-3",
+        "lesson_id": "jac-graph-algorithms-3",
+        "title": "Graph Algorithms Quiz",
+        "difficulty": "advanced",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "Which algorithm uses a queue for level-by-level exploration?",
+                "question_type": "multiple_choice",
+                "options": [
+                    "Breadth-First Search (BFS)",
+                    "Depth-First Search (DFS)",
+                    "PageRank",
+                    "Dijkstra's Algorithm"
+                ],
+                "correct_answer": "Breadth-First Search (BFS)"
+            },
+            {
+                "question_id": "q2",
+                "question_text": "DFS is commonly used for topological sorting and cycle detection.",
+                "question_type": "true_false",
+                "correct_answer": True
+            },
+            {
+                "question_id": "q3",
+                "question_text": "Implement a BFS walker that finds the shortest path between two nodes.",
+                "question_type": "code",
+                "starter_code": """walker ShortestPath {
+    has target_id: str;
+    
+    can find_path {
+        # Your implementation here
+    }
+}"""
+            }
+        ]
+    },
+    {
+        "quiz_id": "quiz-knowledge-graphs-4",
+        "lesson_id": "jac-knowledge-graphs-4",
+        "title": "Knowledge Graphs Quiz",
+        "difficulty": "intermediate",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "What is NOT a typical use case for knowledge graphs?",
+                "question_type": "multiple_choice",
+                "options": [
+                    "Image processing",
+                    "Semantic search",
+                    "Recommendation engines",
+                    "Question answering"
+                ],
+                "correct_answer": "Image processing"
+            },
+            {
+                "question_id": "q2",
+                "question_text": "In a knowledge graph, entities are nodes and relationships are edges.",
+                "question_type": "true_false",
+                "correct_answer": True
+            },
+            {
+                "question_id": "q3",
+                "question_text": "Design a small knowledge graph for a movie recommendation system with at least 3 entity types and 2 relationship types.",
+                "question_type": "free_text",
+                "keywords": ["Movie", "Actor", "Genre", "Director", "starred_in", "has_genre"]
+            }
+        ]
+    },
+    {
+        "quiz_id": "quiz-performance-5",
+        "lesson_id": "jac-performance-optimization-5",
+        "title": "Performance Optimization Quiz",
+        "difficulty": "advanced",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "Which technique reduces redundant computation by storing previous results?",
+                "question_type": "multiple_choice",
+                "options": [
+                    "Caching",
+                    "Batch processing",
+                    "Pruning",
+                    "Profiling"
+                ],
+                "correct_answer": "Caching"
+            },
+            {
+                "question_id": "q2",
+                "question_text": "Lazy evaluation is a technique to defer computation until results are actually needed.",
+                "question_type": "true_false",
+                "correct_answer": True
+            },
+            {
+                "question_id": "q3",
+                "question_text": "Describe three strategies for scaling a Jac application to handle large graphs.",
+                "question_type": "free_text",
+                "keywords": ["distributed", "partitioning", "parallel", "caching", "batch"]
+            }
+        ]
     }
 ]
 
@@ -489,5 +1003,54 @@ SAMPLE_CONCEPTS = [
         "category": "advanced",
         "description": "Integrating AI and LLMs into Jac programs",
         "resources": ["jac-by-llm-1"]
+    },
+    {
+        "concept_id": "state-management",
+        "concept_name": "State Management",
+        "category": "advanced",
+        "description": "Managing walker state during graph traversal",
+        "resources": ["jac-advanced-walkers-2"]
+    },
+    {
+        "concept_id": "multi-walker-systems",
+        "concept_name": "Multi-Walker Coordination",
+        "category": "advanced",
+        "description": "Coordinating multiple walkers for parallel processing",
+        "resources": ["jac-advanced-walkers-2"]
+    },
+    {
+        "concept_id": "graph-algorithms",
+        "concept_name": "Graph Algorithms",
+        "category": "advanced",
+        "description": "Implementing BFS, DFS, and centrality algorithms in Jac",
+        "resources": ["jac-graph-algorithms-3"]
+    },
+    {
+        "concept_id": "knowledge-graphs",
+        "concept_name": "Knowledge Graphs",
+        "category": "applications",
+        "description": "Building and querying knowledge graphs with Jac",
+        "resources": ["jac-knowledge-graphs-4"]
+    },
+    {
+        "concept_id": "performance-optimization",
+        "concept_name": "Performance & Scalability",
+        "category": "advanced",
+        "description": "Optimizing and scaling Jac applications",
+        "resources": ["jac-performance-optimization-5"]
+    },
+    {
+        "concept_id": "semantic-search",
+        "concept_name": "Semantic Search",
+        "category": "applications",
+        "description": "Implementing semantic search using knowledge graphs and byLLM",
+        "resources": ["jac-knowledge-graphs-4", "jac-by-llm-1"]
+    },
+    {
+        "concept_id": "error-handling",
+        "concept_name": "Error Handling",
+        "category": "intermediate",
+        "description": "Building robust Jac programs with exception handling",
+        "resources": ["jac-advanced-walkers-2"]
     }
 ]
